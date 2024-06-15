@@ -17,31 +17,31 @@ cas—the world’s largest research organisation—and institutions around Chin
 ```
 At the Chinese Academy of Sciences (CAS) in Beijing, a prominent wall displays 192 patents related to agricultural innovations. This wall is dedicated to showcasing research on food crop biology. Chinese scientists have recently made significant discoveries, including genes that enhance wheat grains, improve crop growth in salty soils, and increase maize yield by 10%. Researchers also developed genetically modified giant rice, with successful harvests reported in Guizhou. CAS, the world's largest research organization, plays a central role in these advancements.
 ```
-Processing in parallel with prime numbers example
+Processing in parallel with prime numbers example and extracting the json from text reponse
 ```
-seq 1 20 | parallel -j10 'response=$(./promptly --prompt "Is the following number a prime? Respond with starting YES or NO" --input {} --max-tokens 3); echo {} $response'
+seq 1 20 | parallel -j10 'response=$(./promptly -p "Is the following number a prime? Respond with JSON \`\`\`json {\"is_prime\": boolean}\`\`\`. Do not include any explanation." -i {} --max-tokens 24 --extract-json | jq ".is_prime"); echo {} $response'
 ```
 ```
-10 NO. The
-3 YES, 
-1 NO. The
-4 NO, 
-6 NO, the
-9 NO, 
-5 YES, 
-8 NO, 
-7 YES, 
-13 YES, 
-11 YES, 
-14 NO, 
-12 NO, 
-18 NO, 
-15 NO, 
-17 YES, 
-19 YES, 
-16 NO, 
-2 YES, the
-20 NO, 
+3 true
+5 true
+2 true
+7 true
+4 false
+8 false
+9 false
+6 false
+1 false
+10 false
+11 true
+14 false
+12 false
+15 false
+13 true
+16 false
+19 true
+20 false
+18 false
+17 true
 ```
 
 ## TODO
