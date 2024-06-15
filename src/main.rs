@@ -1,3 +1,5 @@
+mod error;
+
 use atty::Stream;
 use clap::{Arg, Command};
 use reqwest::blocking::Client;
@@ -105,7 +107,19 @@ fn main() {
         .expect("Failed to read response text");
 
     let response_json: JsonValue = serde_json::from_str(&response).expect("Failed to parse JSON");
-    let response_text = response_json["choices"][0]["message"]["content"].as_str().expect("Invalid response format");
+    println!("{:#}", response_json);
 
-    println!("{}", response_text);
+    if error::ErrorResponse::is_error(&response) {
+        println!("This JSON contains an error message.");
+        if let Ok(error_response) = error::ErrorResponse::from_json(&response) {
+            eprintln!("Error code: {}", error_response.error.code);
+            eprintln!("Error message: {}", error_response.error.message);
+            std::process::exit(1);
+        }
+    } else {
+        let response_text = response_json["choices"][0]["message"]["content"].as_str().expect("Invalid response format");
+        println!("{}", response_text);
+    }
+
+    
 }
